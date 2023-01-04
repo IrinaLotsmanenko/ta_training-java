@@ -1,12 +1,21 @@
-import models.MilitaryType;
-import Planes.MilitaryPlane;
-import Planes.PassengerPlane;
-import Planes.Plane;
+package com.github.vitalliuss;
+
+import com.github.vitalliuss.models.MilitaryType;
+import com.github.vitalliuss.models.planes.MilitaryPlane;
+import com.github.vitalliuss.models.planes.PassengerPlane;
+import com.github.vitalliuss.models.planes.Plane;
+import com.github.vitalliuss.services.Airport;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Runner {
+
+    private static Logger logger = LogManager.getLogger(Runner.class);
+
     static List<Plane> planes = Arrays.asList(
             new PassengerPlane("Boeing-737", 900, 12000, 60500, 164),
             new PassengerPlane("Boeing-737-800", 940, 12300, 63870, 192),
@@ -27,14 +36,11 @@ public class Runner {
     public static void main(String[] args) {
         Airport airport = new Airport(planes);
         Airport militaryAirport = new Airport(airport.getMilitaryPlanes());
-        Airport passengerAirport = new Airport(airport.getPasPl());
-        System.out.println("Military airport sorted by max distance: " + militaryAirport
-                .sortByMaxDistance()
-                .toString());
-        System.out.println("Passenger airport sorted by max speed: " + passengerAirport
-                .sortByMaxSpeed()
-                .toString());
-
-        System.out.println("Plane with max passenger capacity: " + passengerAirport.getPassengerPlaneWithMaxPassengersCapacity());
+        Airport passengerAirport = new Airport(airport.getPassengerPlanes());
+        militaryAirport.sortByMaxFlightDistance();
+        logger.log(Level.INFO, "Military airport sorted by max flight distance: {}", militaryAirport);
+        passengerAirport.sortByMaxSpeed();
+        logger.log(Level.INFO, "Passenger airport sorted by max speed: {}", passengerAirport);
+        logger.log(Level.INFO, "Plane with max passenger capacity: {}", passengerAirport.getPassengerPlaneWithMaxPassengerCapacity());
     }
 }
